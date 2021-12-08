@@ -1,26 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import ComboBox from './Components/ComboBox';
+import Chart from './Components/Chart';
 
-function App() {
+
+export default function App() {
+   const [line , setLine] = useState<string>('');
+  
   return (
+
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <ComboBox line={line} setLine={setLine}/>
+    <Chart line={line}/>
     </div>
+
   );
 }
 
-export default App;
