@@ -23,6 +23,9 @@ interface weatherDatatype{
     temperature:number;
     windspeed:number;
     humidity:number;
+    pressure:number;
+    winddeg:number;
+    windgust:number;
 }
 
 
@@ -38,6 +41,9 @@ interface iHourly{
     temp:number;
     wind_speed:number;
     humidity:number;
+    pressure:number;
+    wind_deg:number;
+    wind_gust:number;
 }
 interface Temp{
     day:number;
@@ -55,6 +61,9 @@ interface icheckLine{
     isTemp:boolean;
     isWind:boolean;
     isHumid:boolean;
+    isPres:boolean;
+    isWdeg:boolean;
+    isWgust:boolean;
 }
 
 //create an object for icheckLine
@@ -89,8 +98,11 @@ const combinedDatafun = (wdata:iwdatatype) : idataAndticks =>{
             temperature: data.temp,
             humidity: data.humidity,
             windspeed: data.wind_speed,
-
+            pressure: data.pressure,
+            winddeg: data.wind_deg,
+            windgust: data.wind_gust,
         }
+
         if(!checkDate.has( new Date (data.dt*1000).getUTCDate())){
             checkDate.add(new Date (data.dt*1000).getUTCDate());
             combinedDataObj.ticksData.push(data.dt);
@@ -111,6 +123,9 @@ const combinedDatafun = (wdata:iwdatatype) : idataAndticks =>{
                 temperature: data.temp.day,
                 humidity: data.humidity,
                 windspeed: data.wind_speed,
+                pressure: data.pressure,
+                winddeg: data.wind_deg,
+                windgust: data.wind_gust,
 
             }
             combinedDataObj.combinedData.push(wdataobj);
@@ -131,6 +146,9 @@ export default function Chart(props:state){
         isTemp:false,
         isWind:false,
         isHumid:false,
+        isPres:false,
+        isWdeg:false,
+        isWgust:false,
     });
 
 
@@ -166,15 +184,39 @@ export default function Chart(props:state){
                 setCheckLine({...checkLine , isHumid:false});
             }
         }
+        if(cline=== 'Pressure'){
+            if(checkLine.isPres !== true){
+                setCheckLine({...checkLine , isPres:true});
+            }
+            else if(checkLine.isPres === true){
+                setCheckLine({...checkLine , isPres:false});
+            }
+        }
+        if(cline === 'WindDeg'){
+            if(checkLine.isWdeg !== true){
+                setCheckLine({...checkLine , isWdeg:true});
+            }
+            else if(checkLine.isWdeg === true){
+                setCheckLine({...checkLine , isWdeg:false});
+            }
+        }
+        if(cline === 'WindGust'){
+            if(checkLine.isWgust !== true){
+                setCheckLine({...checkLine , isWgust :true});
+            }
+            else if(checkLine.isWgust === true){
+                setCheckLine({...checkLine , isWgust:false});
+            }
+        }
     }
     
     const [combinedWdata , setCombinedWdata] = useState<idataAndticks>({
         combinedData:[],
         ticksData:[],
     });
-    const selectedLine = props.line;
-    console.log('temp ',checkLine.isTemp , 'humid ' ,checkLine.isHumid ,'wind' ,checkLine.isWind);
-    console.log(`in chart ${selectedLine}`);
+    // const selectedLine = props.line;
+    // console.log('temp ',checkLine.isTemp , 'humid ' ,checkLine.isHumid ,'wind' ,checkLine.isWind);
+    // console.log(`in chart ${selectedLine}`);
 
     useEffect(()=>{
         fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${location.lat}&lon=${location.lon}&units=metric&appid=74382af856f0d02d7f684c901b965614`)
@@ -187,7 +229,7 @@ export default function Chart(props:state){
   
       },[]);
     
-      //combinedWdata.combinedData.map(d=> console.log(d));
+      combinedWdata.combinedData.map(d=> console.log(d));
 
       return(
           <>
@@ -219,6 +261,26 @@ export default function Chart(props:state){
             <>
             <YAxis yAxisId="humidy" orientation= "left" domain={[0,100]} tickFormatter={num =>`${num}%`} stroke="green"/>
             <Line yAxisId="humidy" type="monotone" dataKey="humidity" name="Humidity" unit="%" stroke='green' dot={false}/>
+          </>
+          ):("")}
+          { checkLine.isPres ===true ? (
+            <>
+            <YAxis yAxisId="pressure" orientation= "left" domain={[0,1500]} tickFormatter={num =>`${num}hPa `} stroke="yellow"/>
+            <Line yAxisId="pressure" type="monotone" dataKey="pressure" name="Pressure" unit="hPa" stroke='yellow' dot={false}/>
+          </>
+          ):("")}
+          
+          { checkLine.isWdeg ===true ? (
+            <>
+            <YAxis yAxisId="winddeg" orientation= "left" domain={[0,360]} tickFormatter={num =>`${num}°`} stroke="brown"/>
+            <Line yAxisId="winddeg" type="monotone" dataKey="winddeg" name="windDegree" unit="°" stroke='brown' dot={false}/>
+          </>
+          ):("")}
+          
+          { checkLine.isWgust ===true ? (
+            <>
+            <YAxis yAxisId="windgust" orientation= "left" domain={[0,50]} tickFormatter={num =>`${num}m/s`} stroke="pink"/>
+            <Line yAxisId="windgust" type="monotone" dataKey="windgust" name="WindGust" unit="m/s"  stroke='pink' dot={false}/>
           </>
           ):("")}
           
