@@ -14,7 +14,7 @@ let location:loc ={
 
 //props
 interface state{
-    line:string;
+    line:string[];
 }
 
 //weather data to be stored 
@@ -55,16 +55,7 @@ interface iDaily extends Omit<iHourly,'temp'>{
     temp:Temp;
 }
 
-//check the selected line
 
-interface icheckLine{
-    isTemp:boolean;
-    isWind:boolean;
-    isHumid:boolean;
-    isPres:boolean;
-    isWdeg:boolean;
-    isWgust:boolean;
-}
 
 //create an object for icheckLine
 
@@ -135,88 +126,18 @@ const combinedDatafun = (wdata:iwdatatype) : idataAndticks =>{
 
     return combinedDataObj;
 }
-let count:number=0;
-console.log(`out of fun  ${count}`);
-
 
 
 export default function Chart(props:state){
    
-    const [checkLine , setCheckLine] = useState<icheckLine>({
-        isTemp:false,
-        isWind:false,
-        isHumid:false,
-        isPres:false,
-        isWdeg:false,
-        isWgust:false,
-    });
-
-
-    useEffect(()=>{
-        updateCheckLine(props.line)
-    } ,
-    [props.line]);
-
-    //update the selected line as selcet if not selected and unselect if selected.
-
-    function updateCheckLine(cline:string):void{
-        if(cline=== 'Temperature'){
-            if(checkLine.isTemp !== true){
-                setCheckLine({...checkLine , isTemp:true});
-            }
-            else if(checkLine.isTemp === true){
-                setCheckLine({...checkLine , isTemp:false});
-            }
-        }
-        if(cline === 'WindSpeed'){
-            if(checkLine.isWind !== true){
-                setCheckLine({...checkLine , isWind:true});
-            }
-            else if(checkLine.isWind === true){
-                setCheckLine({...checkLine , isWind:false});
-            }
-        }
-        if(cline === 'Humidity'){
-            if(checkLine.isHumid !== true){
-                setCheckLine({...checkLine , isHumid :true});
-            }
-            else if(checkLine.isHumid === true){
-                setCheckLine({...checkLine , isHumid:false});
-            }
-        }
-        if(cline=== 'Pressure'){
-            if(checkLine.isPres !== true){
-                setCheckLine({...checkLine , isPres:true});
-            }
-            else if(checkLine.isPres === true){
-                setCheckLine({...checkLine , isPres:false});
-            }
-        }
-        if(cline === 'WindDeg'){
-            if(checkLine.isWdeg !== true){
-                setCheckLine({...checkLine , isWdeg:true});
-            }
-            else if(checkLine.isWdeg === true){
-                setCheckLine({...checkLine , isWdeg:false});
-            }
-        }
-        if(cline === 'WindGust'){
-            if(checkLine.isWgust !== true){
-                setCheckLine({...checkLine , isWgust :true});
-            }
-            else if(checkLine.isWgust === true){
-                setCheckLine({...checkLine , isWgust:false});
-            }
-        }
-    }
     
+    const selectedLines = props.line;
+
     const [combinedWdata , setCombinedWdata] = useState<idataAndticks>({
         combinedData:[],
         ticksData:[],
     });
-    // const selectedLine = props.line;
-    // console.log('temp ',checkLine.isTemp , 'humid ' ,checkLine.isHumid ,'wind' ,checkLine.isWind);
-    // console.log(`in chart ${selectedLine}`);
+    
 
     useEffect(()=>{
         fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${location.lat}&lon=${location.lon}&units=metric&appid=74382af856f0d02d7f684c901b965614`)
@@ -229,7 +150,7 @@ export default function Chart(props:state){
   
       },[]);
     
-      combinedWdata.combinedData.map(d=> console.log(d));
+     
 
       return(
           <>
@@ -256,54 +177,63 @@ export default function Chart(props:state){
           
           <Tooltip labelFormatter={(label) => new Date(label*1000).toLocaleTimeString() }/>
           <Legend />
-          
-          { checkLine.isHumid ===true ? (
-            <>
-            <YAxis yAxisId="humidy" orientation= "left" domain={[0,100]} tickFormatter={num =>`${num}%`} stroke="green"/>
-            <Line yAxisId="humidy" type="monotone" dataKey="humidity" name="Humidity" unit="%" stroke='green' dot={false}/>
-          </>
-          ):("")}
-          { checkLine.isPres ===true ? (
-            <>
-            <YAxis yAxisId="pressure" orientation= "left" domain={[0,1500]} tickFormatter={num =>`${num}hPa `} stroke="yellow"/>
-            <Line yAxisId="pressure" type="monotone" dataKey="pressure" name="Pressure" unit="hPa" stroke='yellow' dot={false}/>
-          </>
-          ):("")}
-          
-          { checkLine.isWdeg ===true ? (
-            <>
-            <YAxis yAxisId="winddeg" orientation= "left" domain={[0,360]} tickFormatter={num =>`${num}°`} stroke="brown"/>
-            <Line yAxisId="winddeg" type="monotone" dataKey="winddeg" name="windDegree" unit="°" stroke='brown' dot={false}/>
-          </>
-          ):("")}
-          
-          { checkLine.isWgust ===true ? (
-            <>
-            <YAxis yAxisId="windgust" orientation= "left" domain={[0,50]} tickFormatter={num =>`${num}m/s`} stroke="pink"/>
-            <Line yAxisId="windgust" type="monotone" dataKey="windgust" name="WindGust" unit="m/s"  stroke='pink' dot={false}/>
-          </>
-          ):("")}
-          
-          {checkLine.isWind===true ? (
-          <>
-          
-            <YAxis yAxisId="windy" orientation="left" domain={[0 , 50]} tickFormatter={num =>`${num}m/s`} stroke="blue"/>
-            <Line yAxisId="windy" type="monotone" dataKey="windspeed" name="WindSpeed" unit="m/s" stroke="blue" dot={false}/>
-          </>
-          ):("")}
 
-          {checkLine.isTemp===true ? (
-            <>
-            
-                <YAxis yAxisId="tempy" type="number" domain={[-100 , 100] } tickFormatter={num => `${num}°C`}stroke="red"/>
-                <Line yAxisId="tempy" type="monotone" dataKey="temperature"  name = "Temperature" unit="°C" stroke="red" activeDot={{ r: 5 }} dot={false}/>
-            </>
-          ):("")}
+          {
+            selectedLines.map(lines =>(
+                
+                <>
+                { lines === 'Humidity' ? (
+                    <>
+                    <YAxis yAxisId="humidy" orientation= "left" domain={[0,100]} tickFormatter={num =>`${num}%`} stroke="green"/>
+                    <Line yAxisId="humidy" type="monotone" dataKey="humidity" name="Humidity" unit="%" stroke='green' dot={false}/>
+                    </>
+                ):("")}
+                { lines=== 'Pressure' ? (
+                    <>
+                    <YAxis yAxisId="pressure" orientation= "left" domain={[0,1500]} tickFormatter={num =>`${num}hPa `} stroke="yellow"/>
+                    <Line yAxisId="pressure" type="monotone" dataKey="pressure" name="Pressure" unit="hPa" stroke='yellow' dot={false}/>
+                     </>
+                ):("")}
+                
+                { lines=== 'WindDeg' ? (
+                    <>
+                    <YAxis yAxisId="winddeg" orientation= "left" domain={[0,360]} tickFormatter={num =>`${num}°`} stroke="brown"/>
+                    <Line yAxisId="winddeg" type="monotone" dataKey="winddeg" name="windDegree" unit="°" stroke='brown' dot={false}/>
+                    </>
+                ):("")}
+                
+                { lines === 'Windgust' ? (
+                    <>
+                    <YAxis yAxisId="windgust" orientation= "left" domain={[0,50]} tickFormatter={num =>`${num}m/s`} stroke="pink"/>
+                    <Line yAxisId="windgust" type="monotone" dataKey="windgust" name="WindGust" unit="m/s"  stroke='pink' dot={false}/>
+                     </>
+                ):("")}
+                
+                {lines=== 'Windspeed' ? (
+                    <>
+                    <YAxis yAxisId="windy" orientation="left" domain={[0 , 50]} tickFormatter={num =>`${num}m/s`} stroke="blue"/>
+                    <Line yAxisId="windy" type="monotone" dataKey="windspeed" name="WindSpeed" unit="m/s" stroke="blue" dot={false}/>
+                    </>
+                ):("")}
+
+                {lines=== 'Temperature' ? (
+                    <>
+                    <YAxis yAxisId="tempy" type="number" domain={[-100 , 100] } tickFormatter={num => `${num}°C`}stroke="red"/>
+                    <Line yAxisId="tempy" type="monotone" dataKey="temperature"  name = "Temperature" unit="°C" stroke="red" activeDot={{ r: 5 }} dot={false}/>
+                    </>
+                ):("")}
+
+                </>
+                )
+            )
+          }
+          
           
         </LineChart>
       </ResponsiveContainer>
           </div>
           </>
       );
+    
 
 }

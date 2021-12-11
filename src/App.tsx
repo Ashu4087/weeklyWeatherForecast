@@ -5,7 +5,7 @@ import Chart from './Components/Chart';
 
 
 export default function App() {
-   const [line , setLine] = useState<string>('');
+   const [line , setLine] = useState<string[]>([]);
   
   return (
 

@@ -1,20 +1,36 @@
 import { Dispatch, SetStateAction } from "react";
 import Select from '@mui/material/Select';
-import { FormControl, InputLabel, MenuItem } from "@mui/material";
+import { Checkbox, FormControl, InputLabel, List, ListItemText, MenuItem, SelectChangeEvent } from "@mui/material";
 import { Box, minWidth } from "@mui/system";
 
 type lProps ={
-    line :string ;
-    setLine:Dispatch<SetStateAction<string>>;
+    line :string[] ;
+    setLine:Dispatch<SetStateAction<string[]>>;
 
 }
 
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const lineData=['Temperature' , 'Windspeed' , 'Humidity' ,'Pressure' , 'WindDeg', 'Windgust'];
+
+
+
 export default function ComboBox (props:lProps){
 
-    function onChangeLine(ev:string){
-        props.setLine(ev);
-    }
+    const onChangeLine = (ev : SelectChangeEvent<typeof props.line>) =>{
+        const {target : {value}} = ev ;
+        props.setLine(typeof value === 'string' ? value.split(',') :value);
+    };
     
     return(
         <>
@@ -27,23 +43,23 @@ export default function ComboBox (props:lProps){
                 id = 'selectOption'
                 labelId="comboLabel"
                 value = {props.line}
-                onChange = {ev =>{
-                    const selectedline:string = ev.target.value;
-                    onChangeLine(selectedline);
-
-                }}
-
+                onChange ={onChangeLine}
                 label="Select"
                 autoWidth
+                multiple
+                renderValue={(selected)=>selected.join(',')}
+                MenuProps={MenuProps}
             >
+            {
+                lineData.map(selectedLine =>(
+                    <MenuItem  key ={selectedLine} value={selectedLine}>
+                        <Checkbox checked={props.line.indexOf(selectedLine) >-1} />
+                        <ListItemText primary={selectedLine}/>
+                    </MenuItem>
+                )
+                )
+            }
 
-            <MenuItem value="Temperature">Temperature</MenuItem>
-            <MenuItem value="WindSpeed"> Windspeed</MenuItem>
-            <MenuItem value="Humidity" > Humidity </MenuItem>
-            <MenuItem value="Pressure" >Pressure</MenuItem>
-            <MenuItem value="WindDeg" > WindDeg</MenuItem>
-            <MenuItem value="WindGust" > WindGust </MenuItem>
-            
             </Select>
             </FormControl>
         </Box>
