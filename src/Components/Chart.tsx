@@ -59,8 +59,6 @@ interface iDaily extends Omit<iHourly,'temp'>{
 
 //create an object for icheckLine
 
-
-
 //final data contains weatherdata and ticks array;
 
 interface idataAndticks{
@@ -72,7 +70,7 @@ interface idataAndticks{
 
 
 //
-const combinedDatafun = (wdata:iwdatatype) : idataAndticks =>{
+const combinedDatafun = (weatherData:iwdatatype) : idataAndticks =>{
     
     const combinedDataObj:idataAndticks={
         combinedData:[],
@@ -82,9 +80,9 @@ const combinedDatafun = (wdata:iwdatatype) : idataAndticks =>{
     
     let checkDate = new Set();
     
-    combinedDataObj.combinedData = wdata.hourly.map(data =>{
+    combinedDataObj.combinedData = weatherData.hourly.map(data =>{
 
-        const wdataobj:weatherDatatype = {
+        const weatherDataObj:weatherDatatype = {
             time: data.dt,
             temperature: data.temp,
             humidity: data.humidity,
@@ -99,10 +97,10 @@ const combinedDatafun = (wdata:iwdatatype) : idataAndticks =>{
             combinedDataObj.ticksData.push(data.dt);
         }
         
-        return wdataobj;
+        return weatherDataObj;
     })
 
-    wdata.daily.map(data =>{
+    weatherData.daily.map(data =>{
         
         
         if(!checkDate.has( new Date (data.dt*1000).getUTCDate())){
@@ -149,8 +147,6 @@ export default function Chart(props:state){
         .catch(err => console.log(err));
   
       },[]);
-    
-     
 
       return(
           <>
@@ -190,8 +186,8 @@ export default function Chart(props:state){
                 ):("")}
                 { lines=== 'Pressure' ? (
                     <>
-                    <YAxis yAxisId="pressure" orientation= "left" domain={[0,1500]} tickFormatter={num =>`${num}hPa `} stroke="yellow"/>
-                    <Line yAxisId="pressure" type="monotone" dataKey="pressure" name="Pressure" unit="hPa" stroke='yellow' dot={false}/>
+                    <YAxis yAxisId="pressure" orientation= "left" domain={[0,1500]} tickFormatter={num =>`${num}hPa `} stroke="#9633ff"/>
+                    <Line yAxisId="pressure" type="monotone" dataKey="pressure" name="Pressure" unit="hPa" stroke='#9633ff' dot={false}/>
                      </>
                 ):("")}
                 
@@ -204,8 +200,8 @@ export default function Chart(props:state){
                 
                 { lines === 'Windgust' ? (
                     <>
-                    <YAxis yAxisId="windgust" orientation= "left" domain={[0,50]} tickFormatter={num =>`${num}m/s`} stroke="pink"/>
-                    <Line yAxisId="windgust" type="monotone" dataKey="windgust" name="WindGust" unit="m/s"  stroke='pink' dot={false}/>
+                    <YAxis yAxisId="windgust" orientation= "left" domain={[0,50]} tickFormatter={num =>`${num}m/s`} stroke="#ff3386"/>
+                    <Line yAxisId="windgust" type="monotone" dataKey="windgust" name="WindGust" unit="m/s"  stroke='#ff3386' dot={false}/>
                      </>
                 ):("")}
                 

@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import Select from '@mui/material/Select';
-import { Checkbox, FormControl, InputLabel, List, ListItemText, MenuItem, SelectChangeEvent } from "@mui/material";
-import { Box, minWidth } from "@mui/system";
+import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, SelectChangeEvent } from "@mui/material";
+import { Box } from "@mui/system";
 
 type lProps ={
     line :string[] ;
@@ -16,7 +16,7 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+      width: 200,
     },
   },
 };
