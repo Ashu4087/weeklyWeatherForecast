@@ -57,13 +57,13 @@ interface iDaily extends Omit<iHourly,'temp'>{
 
 
 
-//create an object for icheckLine
+//create an object for icheckLine 
 
 //final data contains weatherdata and ticks array;
 
 interface idataAndticks{
     combinedData:weatherDatatype[];
-    ticksData:number[];
+    ticksData:number[]; 
 }
 
 
@@ -180,42 +180,42 @@ export default function Chart(props:state){
                 <>
                 { lines === 'Humidity' ? (
                     <>
-                    <YAxis yAxisId="humidy" orientation= "left" domain={[0,100]} tickFormatter={num =>`${num}%`} stroke="green"/>
-                    <Line yAxisId="humidy" type="monotone" dataKey="humidity" name="Humidity" unit="%" stroke='green' dot={false}/>
+                    <YAxis key={lines} yAxisId="humidy" orientation= "left" domain={[0,100]} tickFormatter={num =>`${num}%`} stroke="green"/>
+                    <Line key={lines} yAxisId="humidy" type="monotone" dataKey="humidity" name="Humidity" unit="%" stroke='green' dot={false}/>
                     </>
                 ):("")}
                 { lines=== 'Pressure' ? (
                     <>
-                    <YAxis yAxisId="pressure" orientation= "left" domain={[0,1500]} tickFormatter={num =>`${num}hPa `} stroke="#9633ff"/>
-                    <Line yAxisId="pressure" type="monotone" dataKey="pressure" name="Pressure" unit="hPa" stroke='#9633ff' dot={false}/>
+                    <YAxis key={lines} yAxisId="pressure" orientation= "left" domain={[0,1500]} tickFormatter={num =>`${num}hPa `} stroke="#9633ff"/>
+                    <Line key={lines} yAxisId="pressure" type="monotone" dataKey="pressure" name="Pressure" unit="hPa" stroke='#9633ff' dot={false}/>
                      </>
                 ):("")}
                 
                 { lines=== 'WindDeg' ? (
                     <>
-                    <YAxis yAxisId="winddeg" orientation= "left" domain={[0,360]} tickFormatter={num =>`${num}°`} stroke="brown"/>
-                    <Line yAxisId="winddeg" type="monotone" dataKey="winddeg" name="windDegree" unit="°" stroke='brown' dot={false}/>
+                    <YAxis key={lines} yAxisId="winddeg" orientation= "left" domain={[0,360]} tickFormatter={num =>`${num}°`} stroke="brown"/>
+                    <Line  key={lines} yAxisId="winddeg" type="monotone" dataKey="winddeg" name="windDegree" unit="°" stroke='brown' dot={false}/>
                     </>
                 ):("")}
                 
                 { lines === 'Windgust' ? (
                     <>
-                    <YAxis yAxisId="windgust" orientation= "left" domain={[0,50]} tickFormatter={num =>`${num}m/s`} stroke="#ff3386"/>
-                    <Line yAxisId="windgust" type="monotone" dataKey="windgust" name="WindGust" unit="m/s"  stroke='#ff3386' dot={false}/>
+                    <YAxis key={lines} yAxisId="windgust" orientation= "left" domain={[0,50]} tickFormatter={num =>`${num}m/s`} stroke="#ff3386"/>
+                    <Line key={lines} yAxisId="windgust" type="monotone" dataKey="windgust" name="WindGust" unit="m/s"  stroke='#ff3386' dot={false}/>
                      </>
                 ):("")}
                 
                 {lines=== 'Windspeed' ? (
                     <>
-                    <YAxis yAxisId="windy" orientation="left" domain={[0 , 50]} tickFormatter={num =>`${num}m/s`} stroke="blue"/>
-                    <Line yAxisId="windy" type="monotone" dataKey="windspeed" name="WindSpeed" unit="m/s" stroke="blue" dot={false}/>
+                    <YAxis key={lines} yAxisId="windy" orientation="left" domain={[0 , 50]} tickFormatter={num =>`${num}m/s`} stroke="blue"/>
+                    <Line key={lines} yAxisId="windy" type="monotone" dataKey="windspeed" name="WindSpeed" unit="m/s" stroke="blue" dot={false}/>
                     </>
                 ):("")}
 
                 {lines=== 'Temperature' ? (
                     <>
-                    <YAxis yAxisId="tempy" type="number" domain={[-100 , 100] } tickFormatter={num => `${num}°C`}stroke="red"/>
-                    <Line yAxisId="tempy" type="monotone" dataKey="temperature"  name = "Temperature" unit="°C" stroke="red" activeDot={{ r: 5 }} dot={false}/>
+                    <YAxis key={lines} yAxisId="tempy" type="number" domain={[-100 , 100] } tickFormatter={num => `${num}°C`}stroke="red"/>
+                    <Line key={lines} yAxisId="tempy" type="monotone" dataKey="temperature"  name = "Temperature" unit="°C" stroke="red" activeDot={{ r: 5 }} dot={false}/>
                     </>
                 ):("")}
 

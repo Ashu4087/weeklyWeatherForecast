@@ -35,7 +35,7 @@ export default function ComboBox (props:lProps){
     return(
         <>
         
-        <Box sx={{minWidth:200}} marginTop={1} marginLeft={50}>
+        <Box sx={{minWidth:200}} marginTop={1} marginLeft={100}>
             <FormControl sx={{minWidth:150}} >
                 <InputLabel id="comboLabel">Select</InputLabel>
             
